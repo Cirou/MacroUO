@@ -29,7 +29,7 @@ jobs:
         run: msbuild Solution/MacroUO.sln /p:Configuration=Release /p:Platform="Any CPU" /m
 
       - name: Zip release files
-        run: Compress-Archive -Path Solution/Output/Release/* -DestinationPath MacroUO-${{ github.ref_name }}.zip
+        run: Compress-Archive -Path Solution/Output/Release/MacroUO.exe,Solution/Output/Release/MacroUO.exe.config,Solution/Output/Release/Presets.xml -DestinationPath MacroUO-${{ github.ref_name }}.zip
         shell: pwsh
 
       - name: Create GitHub Release
