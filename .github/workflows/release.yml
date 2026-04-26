@@ -1,0 +1,40 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  build-and-release:
+    name: Build & Release
+    runs-on: windows-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v2
+
+      - name: Restore NuGet packages
+        run: nuget restore Solution/MacroUO.sln
+
+      - name: Build (Release)
+        run: msbuild Solution/MacroUO.sln /p:Configuration=Release /p:Platform="Any CPU" /m
+
+      - name: Zip release files
+        run: Compress-Archive -Path Solution/Output/Release/* -DestinationPath MacroUO-${{ github.ref_name }}.zip
+        shell: pwsh
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "MacroUO ${{ github.ref_name }}"
+          body: "Release ${{ github.ref_name }}"
+          files: MacroUO-${{ github.ref_name }}.zip
