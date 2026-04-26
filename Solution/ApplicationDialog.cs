@@ -925,7 +925,15 @@ namespace MacroUO
                         keyboardState[16] |= 0x80;
 
                     NativeMethods.KeyboardState(keyboardState);
-                    NativeMethods.SendKeyDown(windowHandle, m_KeyboardLayout, keyCode);
+
+                    if (m_CheckBoxAlt.Checked)
+                    {
+                        NativeMethods.SendAltDown(windowHandle, m_KeyboardLayout);
+                        NativeMethods.SendSysKeyDown(windowHandle, m_KeyboardLayout, keyCode);
+                        NativeMethods.SendAltUp(windowHandle, m_KeyboardLayout);
+                    }
+                    else
+                        NativeMethods.SendKeyDown(windowHandle, m_KeyboardLayout, keyCode);
 
                     if (m_CheckBoxAlt.Checked)
                         keyboardState[18] &= 0x7F;
@@ -995,13 +1003,12 @@ namespace MacroUO
         private Boolean EnumerateWindow(IntPtr windowHandle, IntPtr lParameter)
         {
             String windowClass = NativeMethods.GetWindowClass(windowHandle);
-
-            if (!windowClass.Contains("Ultima Online"))
-                return true;
-
             String windowText = NativeMethods.GetWindowText(windowHandle);
 
-            if (!windowText.Contains("Ultima Online - "))
+            Boolean isClassicUO = windowText.Contains(" - ClassicUO - ");
+            Boolean isLegacyClient = windowClass.Contains("Ultima Online") && windowText.Contains("Ultima Online - ");
+
+            if (!isClassicUO && !isLegacyClient)
                 return true;
 
             UInt32 windowThreadId = NativeMethods.GetWindowThreadId(windowHandle);
