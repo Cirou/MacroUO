@@ -23,6 +23,7 @@ namespace MacroUO
         #region Members
         private Boolean m_Collapsed;
         private Boolean m_PresetsChanged;
+        private Boolean m_UpdatingControls;
         private Decimal m_CounterRuns;
         private Decimal m_CounterTime;
         private Int32 m_PresetsPreviousIndex;
@@ -761,7 +762,7 @@ namespace MacroUO
 
         private void CheckBoxAltCheckedChanged(Object sender, EventArgs e)
         {
-            if (!m_CheckBoxAlt.Focused)
+            if (m_UpdatingControls)
                 return;
 
             Int32 selectedIndex = m_ComboBoxPresets.SelectedIndex;
@@ -775,7 +776,7 @@ namespace MacroUO
 
         private void CheckBoxCtrlCheckedChanged(Object sender, EventArgs e)
         {
-            if (!m_CheckBoxCtrl.Focused)
+            if (m_UpdatingControls)
                 return;
 
             Int32 selectedIndex = m_ComboBoxPresets.SelectedIndex;
@@ -789,7 +790,7 @@ namespace MacroUO
 
         private void CheckBoxShiftCheckedChanged(Object sender, EventArgs e)
         {
-            if (!m_CheckBoxShift.Focused)
+            if (m_UpdatingControls)
                 return;
 
             Int32 selectedIndex = m_ComboBoxPresets.SelectedIndex;
@@ -838,9 +839,11 @@ namespace MacroUO
 
             m_ComboBoxKeys.SelectedItem = macro.Key;
             m_NumericUpDownDelay.Value = macro.Delay;
+            m_UpdatingControls = true;
             m_CheckBoxAlt.Checked = macro.ModifierAlt;
             m_CheckBoxCtrl.Checked = macro.ModifierCtrl;
             m_CheckBoxShift.Checked = macro.ModifierShift;
+            m_UpdatingControls = false;
 
             m_PresetsPreviousIndex = selectedIndex;
         }
@@ -1223,9 +1226,11 @@ namespace MacroUO
             m_TableLayoutPanelPresets.Enabled = false;
             m_ComboBoxKeys.SelectedIndex = 0;
             m_NumericUpDownDelay.Value = 100m;
+            m_UpdatingControls = true;
             m_CheckBoxAlt.Checked = false;
             m_CheckBoxCtrl.Checked = false;
             m_CheckBoxShift.Checked = false;
+            m_UpdatingControls = false;
             Refresh();
 
             m_PresetsChanged = false;
