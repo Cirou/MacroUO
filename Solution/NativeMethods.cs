@@ -292,20 +292,20 @@ namespace MacroUO
         {
             const UInt32 vkMenu = 0x12u;
             UInt32 scanCode = (1u | (MapVirtualKeyEx(vkMenu, MAPVK_TYPE.MAPVK_VK_TO_VSC, keyboardLayoutHandle) << 16));
-            SendMessage(windowHandle, (UInt32)WINDOW_MESSAGE.WM_SYSKEYDOWN, (IntPtr)vkMenu, (IntPtr)(Int32)scanCode);
+            SendMessage(windowHandle, (UInt32)WINDOW_MESSAGE.WM_SYSKEYDOWN, (IntPtr)vkMenu, (IntPtr)unchecked((Int32)scanCode));
         }
 
         public static void SendAltUp(IntPtr windowHandle, IntPtr keyboardLayoutHandle)
         {
             const UInt32 vkMenu = 0x12u;
             UInt32 scanCode = (1u | (MapVirtualKeyEx(vkMenu, MAPVK_TYPE.MAPVK_VK_TO_VSC, keyboardLayoutHandle) << 16) | 0xC0000000u);
-            SendMessage(windowHandle, (UInt32)WINDOW_MESSAGE.WM_KEYUP, (IntPtr)vkMenu, (IntPtr)(Int32)scanCode);
+            SendMessage(windowHandle, (UInt32)WINDOW_MESSAGE.WM_KEYUP, (IntPtr)vkMenu, (IntPtr)unchecked((Int32)scanCode));
         }
 
         public static void SendSysKeyDown(IntPtr windowHandle, IntPtr keyboardLayoutHandle, UInt32 key)
         {
             UInt32 scanCode = (1u | (MapVirtualKeyEx(key, MAPVK_TYPE.MAPVK_VK_TO_VSC, keyboardLayoutHandle) << 16) | 0x20000000u);
-            SendMessage(windowHandle, (UInt32)WINDOW_MESSAGE.WM_SYSKEYDOWN, (IntPtr)key, (IntPtr)(Int32)scanCode);
+            SendMessage(windowHandle, (UInt32)WINDOW_MESSAGE.WM_SYSKEYDOWN, (IntPtr)key, (IntPtr)unchecked((Int32)scanCode));
         }
 
         public static void SetPosition(IntPtr windowHandle, Rectangle rectangle)
